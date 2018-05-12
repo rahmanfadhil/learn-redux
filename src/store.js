@@ -1,53 +1,38 @@
 import { combineReducers, applyMiddleware, createStore } from 'redux'
+import logger from 'redux-logger'
+import thunk from 'redux-thunk'
 
-// const reducer = (state, action) => {
-//   switch(action.type){
-//     case "INC":
-//       return state+action.payload
-//       break;
-//     case "DEC":
-//       return state-action.payload
-//       break;
-//   }
-//   return state;
-// }
+let initialState = {
+  fetching: false,
+  fetched: false,
+  user: {},
+  error: null
+}
 
-const userReducer = (state={}, action) => {
-  let new_state = {...state}
+const userReducer = (state=initialState, action) => {
+  // let new_state = {...state}
   switch(action.type) {
-    case "CHANGE_NAME": {
-      new_state.name = action.payload;
+    case "FETCH_USER_START": {
+      return {...state, fetching: true};
       break;
     }
-    case "CHANGE_AGE": {
-      new_state.age = action.payload;
+    case "FETCH_USER_ERROR": {
+      return {...state, fetching: false, error: action.payload };
       break;
     }
-    case "E": {
-      throw new Error("AHHHHHHHH")
+    case "RECIEVE_USER": {
+      return {...state, fetching: false, fetched: true, user: action.payload };
+      break;
     }
   }
-  return new_state
+  return state
 }
 
 const reducers = combineReducers({
   user: userReducer
 })
 
-const logger = store => next => action => {
-  console.log("action fired", action)
-  next(action)
-}
-
-const error = store => next => action => {
-  try {
-    next(action)
-  } catch(e) {
-    console.log("AHH", e);
-  }
-}
-
-const middleware = applyMiddleware(logger, error)
+const middleware = applyMiddleware(thunk, logger)
 
 const store = createStore(reducers, middleware)
 
