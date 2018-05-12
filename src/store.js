@@ -1,5 +1,6 @@
 import { combineReducers, applyMiddleware, createStore } from 'redux'
 import logger from 'redux-logger'
+import promise from 'redux-promise-middleware';
 import thunk from 'redux-thunk'
 
 let initialState = {
@@ -12,15 +13,15 @@ let initialState = {
 const userReducer = (state=initialState, action) => {
   // let new_state = {...state}
   switch(action.type) {
-    case "FETCH_USER_START": {
+    case "FETCH_USER_PENDING": {
       return {...state, fetching: true};
       break;
     }
-    case "FETCH_USER_ERROR": {
+    case "FETCH_USER_FULFILLED": {
       return {...state, fetching: false, error: action.payload };
       break;
     }
-    case "RECIEVE_USER": {
+    case "FETCH_USER_REJECTED": {
       return {...state, fetching: false, fetched: true, user: action.payload };
       break;
     }
@@ -32,7 +33,7 @@ const reducers = combineReducers({
   user: userReducer
 })
 
-const middleware = applyMiddleware(thunk, logger)
+const middleware = applyMiddleware(promise(), thunk, logger)
 
 const store = createStore(reducers, middleware)
 
