@@ -1,44 +1,17 @@
-import { combineReducers, applyMiddleware, createStore } from 'redux'
+import { applyMiddleware, createStore } from 'redux'
+
+// import middlewares
 import logger from 'redux-logger'
 import promise from 'redux-promise-middleware';
 import thunk from 'redux-thunk'
 
-let initialState = {
-  fetching: false,
-  fetched: false,
-  user: {},
-  error: null
-}
+// import reducers
+import reducers from './reducers'
 
-const userReducer = (state=initialState, action) => {
-  // let new_state = {...state}
-  switch(action.type) {
-    case "FETCH_USER_PENDING": {
-      return {...state, fetching: true};
-      break;
-    }
-    case "FETCH_USER_FULFILLED": {
-      return {...state, fetching: false, error: action.payload };
-      break;
-    }
-    case "FETCH_USER_REJECTED": {
-      return {...state, fetching: false, fetched: true, user: action.payload };
-      break;
-    }
-  }
-  return state
-}
-
-const reducers = combineReducers({
-  user: userReducer
-})
-
+// apply middlewares
 const middleware = applyMiddleware(promise(), thunk, logger)
 
+// create store
 const store = createStore(reducers, middleware)
-
-store.subscribe(() => {
-  console.log("store is change", store.getState());
-})
 
 export default store
