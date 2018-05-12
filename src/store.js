@@ -1,4 +1,4 @@
-import { combineReducers, createStore } from 'redux'
+import { combineReducers, applyMiddleware, createStore } from 'redux'
 
 // const reducer = (state, action) => {
 //   switch(action.type){
@@ -23,20 +23,33 @@ const userReducer = (state={}, action) => {
       new_state.age = action.payload;
       break;
     }
+    case "E": {
+      throw new Error("AHHHHHHHH")
+    }
   }
   return new_state
 }
 
-const tweetsReducer = (state=[], action) => {
-  return state
-}
-
 const reducers = combineReducers({
-  user: userReducer,
-  tweets: tweetsReducer
+  user: userReducer
 })
 
-const store = createStore(reducers)
+const logger = store => next => action => {
+  console.log("action fired", action)
+  next(action)
+}
+
+const error = store => next => action => {
+  try {
+    next(action)
+  } catch(e) {
+    console.log("AHH", e);
+  }
+}
+
+const middleware = applyMiddleware(logger, error)
+
+const store = createStore(reducers, middleware)
 
 store.subscribe(() => {
   console.log("store is change", store.getState());

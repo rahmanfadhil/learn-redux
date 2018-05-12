@@ -6,6 +6,7 @@ class App extends Component {
     store.dispatch({ type: "CHANGE_NAME", payload: "Rahman"})
     store.dispatch({ type: "CHANGE_AGE", payload: 14})
     store.dispatch({ type: "CHANGE_AGE", payload: 16})
+    store.dispatch({ type: "E", payload: 16})
   }
   render() {
     return (
