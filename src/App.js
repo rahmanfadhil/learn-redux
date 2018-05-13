@@ -3,11 +3,7 @@ import React, { Component } from 'react';
 import axios from 'axios';
 import { connect } from 'react-redux'
 
-@connect((state) => {
-  return {
-    user: state.user
-  }
-})
+@connect((state) => ({ user: state.user }))
 class App extends Component {
   componentWillMount() {
     this.props.dispatch({
