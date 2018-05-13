@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 // import store from './store'
 import axios from 'axios';
 import { connect } from 'react-redux'
+import Followers from './components/Followers'
 
 class App extends Component {
   componentWillMount() {
@@ -15,7 +16,9 @@ class App extends Component {
         {(this.props.user.fetched === true) ? (
           <div>
             <h2>{this.props.user.user.login}</h2>
-            <img align="left" src={this.props.user.user.avatar_url} alt=""/>
+            <img src={this.props.user.user.avatar_url} alt=""/>
+            <br/>
+            <Followers />
           </div>
         ) : (
           <h3>Loading...</h3>
