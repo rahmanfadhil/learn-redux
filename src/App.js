@@ -3,13 +3,9 @@ import React, { Component } from 'react';
 import axios from 'axios';
 import { connect } from 'react-redux'
 
-@connect((state) => ({ user: state.user }))
 class App extends Component {
   componentWillMount() {
-    this.props.dispatch({
-      type: "FETCH_USER",
-      payload: axios.get('https://api.github.com/users/rahmanfadhil')
-    })
+    this.props.fetchUser('name')
   }
   render() {
     console.log(this.props);
@@ -21,4 +17,13 @@ class App extends Component {
   }
 }
 
-export default App;
+export default connect(
+  (state) => ({
+    user: state.user
+  }),
+  (dispatch) => ({
+    fetchUser: (username) => {
+      dispatch({ type: "FETCH_USER", payload: axios.get(`https://api.github.com/users/${username}`)})
+    }
+  })
+)(App);
